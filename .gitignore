@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+dataset/
+saved_models/
+
+info/IMDB_Sentiment_Analysis_documentation.docx
+info/IMDB_Sentiment_Analysis_Presentation.pdf
+info/IMDB_Sentiment_Analysis_Presentation.pptx

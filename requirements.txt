@@ -1,0 +1,11 @@
+gradio>=4.0
+numpy
+pandas
+scikit-learn
+joblib
+beautifulsoup4
+nltk
+tensorflow
+torch
+transformers
+safetensors
