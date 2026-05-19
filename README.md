@@ -156,7 +156,7 @@ Evaluated on a held-out test set of **9,917 reviews** (4,940 negative · 4,977 p
 | **Linear SVC** | TF-IDF 50k | **91%** | **91%** | **91%** | **0.91** | 🏆 Best classical model |
 | Naive Bayes | TF-IDF 50k | 88% | 88% | 88% | 0.88 | Fastest to train |
 | Simple RNN | — | 83% | 83% | 83% | 0.82 | Weakest — vanishing gradient |
-| LSTM | — | 90% | 90% | 90% | 0.90 | Best DL sequence model |
+| LSTM | — | 90% | 90% | 90% | 0.90 | 🏆 Best DL sequence model |
 | **DistilBERT** | — | **90%** | **91%** | **90%** | **0.91** | 🏆 Best overall · 94% recall on positive |
 
 > All ML results use TF-IDF 50k features with unigrams + bigrams. The 10k configuration consistently underperformed the 50k across all three classical models.
