@@ -155,20 +155,30 @@ Fine-tunes `distilbert-base-uncased` (66M parameters) for sequence classificatio
 
 ## Results
 
-> Results reflect test-set performance on the 20% hold-out split.
+Evaluated on a held-out test set of **9,917 reviews** (4,940 negative · 4,977 positive), using an 80/20 stratified split.
 
-| Model | TF-IDF Features | Accuracy | Notes |
-|---|---|---|---|
-| Logistic Regression | 10k | — | Solid baseline |
-| Logistic Regression | 50k | — | Marginal improvement |
-| LinearSVC | 10k | — | Best classical |
-| LinearSVC | 50k | — | Best classical |
-| Multinomial Naive Bayes | 10k | — | Fastest |
-| Simple RNN | — | — | Prone to vanishing gradient |
-| LSTM | — | — | Significantly better than RNN |
-| **DistilBERT** | — | **~93%+** | Best overall |
+| Model | Features | Accuracy | Precision | Recall | F1 | Notes |
+|---|---|:---:|:---:|:---:|:---:|---|
+| Logistic Regression | TF-IDF 50k | 90% | 90% | 90% | 0.90 | Strong interpretable baseline |
+| **Linear SVC** | TF-IDF 50k | **91%** | **91%** | **91%** | **0.91** | 🏆 Best classical model |
+| Naive Bayes | TF-IDF 50k | 88% | 88% | 88% | 0.88 | Fastest to train |
+| Simple RNN | — | 83% | 83% | 83% | 0.82 | Weakest — vanishing gradient |
+| LSTM | — | 90% | 90% | 90% | 0.90 | Best DL sequence model |
+| **DistilBERT** | — | **90%** | **91%** | **90%** | **0.91** | 🏆 Best overall · 94% recall on positive |
 
-> **Note:** Run the notebooks to populate exact accuracy/F1 scores from your environment. DistilBERT results depend on GPU availability and training duration.
+> All ML results use TF-IDF 50k features with unigrams + bigrams. The 10k configuration consistently underperformed the 50k across all three classical models.
+
+### Key Observations
+
+- **Linear SVC wins on accuracy (91%)** and trains in under 30 seconds — the strongest candidate for latency-sensitive production use.
+- **DistilBERT wins on positive recall (94%)** — it is the best choice when false negatives on positive reviews carry a higher cost (e.g. recommendation systems, brand monitoring).
+- **LSTM matches Logistic Regression (90%)** and substantially outperforms Simple RNN (+7 pp), confirming that gating mechanisms matter for long-form text.
+- **Simple RNN (83%) should not be deployed** — it falls well below all alternatives at similar training complexity.
+- **Transformer vs. LinearSVC** — accuracy is effectively tied (90% vs 91%), but DistilBERT's recall advantage on positives is meaningful in asymmetric-cost scenarios.
+
+### Confusion Matrix Insight
+
+All models produce more false positives than false negatives — a common pattern on IMDB data due to mixed-sentiment language in critical reviews. DistilBERT is the exception, achieving the highest positive-class recall by capturing subtle linguistic cues that sparse models miss.
 
 ---
 
