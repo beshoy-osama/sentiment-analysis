@@ -1,6 +1,6 @@
 # 🎬 IMDB Sentiment Analysis
 
-> Binary sentiment classification on 50,000 movie reviews using classical ML, deep learning, and transformer models.
+> sentiment classification on 50,000 movie reviews using classical ML, deep learning, and transformer models.
 
 ---
 
@@ -38,19 +38,12 @@ Each paradigm uses a dedicated preprocessing pipeline tuned to its architectural
 
 ```
 .
-├── eda.ipynb                          # Exploratory Data Analysis
-├── sentiment_analysis_imdb_final.ipynb  # Full modeling pipeline
-├── saved_models/
-│   ├── ml/
-│   │   ├── linear_svc_model.joblib
-│   │   └── tfidf_50k_vectorizer.joblib
-│   ├── dl_lstm/
-│   │   ├── lstm_sentiment_model.keras
-│   │   ├── tokenizer_dl.joblib
-│   │   └── dl_config.json
-│   └── transformer_distilbert/
-│       ├── model files (HuggingFace format)
-│       └── tokenizer files
+├── info/
+├── app/
+├    ── app.py
+├── notebooks/ 
+├    ── eda.ipynb                          # Exploratory Data Analysis
+├    ── sentiment_analysis_imdb_final.ipynb  # Full modeling pipeline
 └── README.md
 ```
 
@@ -232,16 +225,6 @@ joblib
 
 </details>
 
-### 4. Download NLTK assets
-
-```python
-import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('omw-1.4')
-nltk.download('averaged_perceptron_tagger_eng')
-```
-
 ---
 
 ## Usage
@@ -258,64 +241,6 @@ jupyter notebook eda.ipynb
 jupyter notebook sentiment_analysis_imdb_final.ipynb
 ```
 
-Cells are ordered sequentially. Run all cells top-to-bottom. The dataset is downloaded automatically on first run.
-
-### Load a saved model for inference
-
-**LinearSVC (fastest)**
-
-```python
-import joblib
-
-vectorizer = joblib.load("saved_models/ml/tfidf_50k_vectorizer.joblib")
-model      = joblib.load("saved_models/ml/linear_svc_model.joblib")
-
-review = ["This movie was an absolute masterpiece. Stunning performances."]
-x = vectorizer.transform(review)
-print(model.predict(x))  # [1] → positive
-```
-
-**LSTM**
-
-```python
-import joblib, json
-import numpy as np
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-
-model     = load_model("saved_models/dl_lstm/lstm_sentiment_model.keras")
-tokenizer = joblib.load("saved_models/dl_lstm/tokenizer_dl.joblib")
-config    = json.load(open("saved_models/dl_lstm/dl_config.json"))
-
-seq  = tokenizer.texts_to_sequences(["Terrible film, complete waste of time."])
-padded = pad_sequences(seq, maxlen=config["max_length"], padding="post", truncating="post")
-prob = model.predict(padded)[0][0]
-print("positive" if prob > 0.5 else "negative")
-```
-
-**DistilBERT**
-
-```python
-from transformers import pipeline
-
-classifier = pipeline(
-    "text-classification",
-    model="saved_models/transformer_distilbert",
-    tokenizer="saved_models/transformer_distilbert"
-)
-print(classifier("One of the best films I've seen in years."))
-```
-
----
-
-## Saved Models
-
-| Path | Contents | Use case |
-|---|---|---|
-| `saved_models/ml/` | LinearSVC + TF-IDF 50k | Fast CPU inference |
-| `saved_models/dl_lstm/` | Keras LSTM + DL tokenizer + config JSON | Moderate accuracy, GPU optional |
-| `saved_models/transformer_distilbert/` | DistilBERT weights + tokenizer | Highest accuracy, GPU recommended |
-
 ---
 
 ## Tech Stack
@@ -328,13 +253,7 @@ print(classifier("One of the best films I've seen in years."))
 | Deep Learning | `tensorflow` / `keras` (Embedding, SimpleRNN, LSTM) |
 | Transformers | `transformers`, `datasets`, `torch` |
 | Visualization | `matplotlib`, `seaborn`, `wordcloud` |
-| Model Persistence | `joblib` |
 
----
-
-## License
-
-This project is released under the [MIT License](LICENSE).
 
 ---
 
