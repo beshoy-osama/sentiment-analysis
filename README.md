@@ -32,20 +32,6 @@ This project tackles the classic NLP problem of **binary sentiment classificatio
 
 Each paradigm uses a dedicated preprocessing pipeline tuned to its architectural needs, from aggressive TF-IDF-friendly cleaning to the minimal touch preferred by WordPiece tokenizers.
 
----
-
-## Project Structure
-
-```
-.
-├── info/
-├── app/
-├    ── app.py
-├── notebooks/ 
-├    ── eda.ipynb                          # Exploratory Data Analysis
-├    ── sentiment_analysis_imdb_final.ipynb  # Full modeling pipeline
-└── README.md
-```
 
 ---
 
@@ -185,7 +171,7 @@ All models produce more false positives than false negatives — a common patter
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/imdb-sentiment-analysis.git
+git clone https://github.com/beshoy-osama/imdb-sentiment-analysis.git
 cd imdb-sentiment-analysis
 ```
 
