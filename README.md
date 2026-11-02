@@ -7,7 +7,6 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [Project Structure](#project-structure)
 - [Dataset](#dataset)
 - [Exploratory Data Analysis](#exploratory-data-analysis)
 - [Preprocessing Pipelines](#preprocessing-pipelines)
@@ -17,7 +16,6 @@
 - [Installation](#installation)
 - [Usage](#usage)
 - [Saved Models](#saved-models)
-- [Demo App](#demo-app)
 - [Tech Stack](#tech-stack)
 
 ---
