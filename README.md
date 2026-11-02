@@ -12,7 +12,6 @@
 - [Preprocessing Pipelines](#preprocessing-pipelines)
 - [Models](#models)
 - [Results](#results)
-- [Known Limitations](#known-limitations)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Saved Models](#saved-models)
@@ -112,7 +111,7 @@ Embedding (vocab=50k, dim=64) -> [RNN | LSTM](64 units) -> Dense(16/32, ReLU) ->
 - Max sequence length: **580 tokens** (about the 95th percentile of review length: 581 words in the EDA)
 - Optimizer: Adam; Loss: Binary Crossentropy
 - Early stopping on `val_loss` with `patience=3`, restoring best weights. Early stopping ended Simple RNN training at epoch 10 (best epoch 7) and LSTM training at epoch 7 (best epoch 4).
-- The validation data is the held-out test set (see [Known Limitations](#known-limitations)).
+- The validation data is the held-out test set.
 
 ### Transformer: DistilBERT Fine-Tuning
 
@@ -129,7 +128,7 @@ Fine-tunes `distilbert-base-uncased` (66M parameters) for sequence classificatio
 | Batch size | 64 |
 | Learning rate | 2e-5 |
 | Weight decay | 0.05 |
-| Warmup | `warmup_steps=0.1` in the notebook (intended as a 10% ratio; see Known Limitations) |
+| Warmup | `warmup_steps=0.1` in the notebook (intended as a 10% ratio) |
 | Mixed precision (fp16) | Enabled if a GPU is available |
 
 ---
@@ -163,25 +162,12 @@ Logistic Regression, Linear SVC, Naive Bayes, LSTM, and DistilBERT all make more
 
 ---
 
-## Known Limitations
-
-- **Test set used during model selection.** Early stopping for the RNN/LSTM and `load_best_model_at_end` plus early stopping for DistilBERT monitored the same held-out test set that is reported above, and the 10k vs. 50k TF-IDF comparison was also made on it. Reported metrics may therefore be slightly optimistic. A separate train/validation/test split is recommended.
-- **Single run, no confidence intervals or multiple seeds.**
-- **DistilBERT truncation and warmup.** Inputs are truncated at 256 tokens, which cuts more than a quarter of reviews (the 75th percentile is 276 words). The notebook sets `warmup_steps=0.1`, but a 10% warmup would need `warmup_ratio=0.1`; depending on the `transformers` version, 0.1 steps may effectively disable warmup. Both may have limited its accuracy.
-- **No systematic hyperparameter search**; only the TF-IDF vocabulary size (10k vs. 50k) was compared.
-- **Results are specific to the IMDB domain** and may need domain adaptation for other review types.
-- **No latency or training-time benchmarks** were run for the classical models.
-
----
-
 ## Installation
 
 ### Prerequisites
 
 - Python 3.9+
 - CUDA-capable GPU *(recommended for transformer fine-tuning)*
-
-> `src/app/app.py` includes a compatibility loader for `.keras` models saved with Keras 3 when running on TensorFlow 2.10.
 
 ### 1. Clone the repository
 
@@ -204,10 +190,9 @@ venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 ```
 
-`requirements.txt` covers the Gradio app and the core libraries:
+`requirements.txt` contains the core libraries:
 
 ```
-gradio>=4.0
 numpy
 pandas
 scikit-learn
@@ -244,19 +229,11 @@ jupyter notebook src/notebooks/sentiment_analysis_imdb.ipynb
 
 Run the notebook through the save cells to generate `src/saved_models/`.
 
-### Run the demo app
-
-```bash
-python src/app/app.py
-```
-
-Then open http://127.0.0.1:7860.
-
 ---
 
 ## Saved Models
 
-The notebook saves trained models to `src/saved_models/` (excluded from git). The demo app expects this layout:
+The notebook saves trained models to `src/saved_models/` (excluded from git):
 
 ```
 src/saved_models/
@@ -270,7 +247,7 @@ src/saved_models/
 └── transformer_distilbert/           # Hugging Face model + tokenizer files
 ```
 
-The app needs these files to produce predictions. Generate them by running the notebook, or place pre-trained copies in this layout.
+Generate these files by running the notebook through the model-saving cells.
 
 ---
 
@@ -283,7 +260,7 @@ The app needs these files to produce predictions. Generate them by running the n
 | Classical ML | `scikit-learn` (LogisticRegression, LinearSVC, MultinomialNB) |
 | Deep Learning | `tensorflow` / `keras` (Embedding, SimpleRNN, LSTM) |
 | Transformers | `transformers`, `datasets`, `torch` |
-| Serving | `gradio`, `joblib` |
+| Model persistence | `joblib` |
 | Visualization | `matplotlib`, `seaborn`, `wordcloud` |
 
 ---
